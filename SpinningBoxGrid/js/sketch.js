@@ -1,6 +1,7 @@
 let boxes = [];
 const boxSize = 40;
 const spacing = 70;
+const minRotationSpeed = 0.005;
 
 
 function setup() {
@@ -19,9 +20,9 @@ function setup() {
                 z: 0,
                 rotX: 0,
                 rotY: 0,
-                // Different rotation speeds for each box
-                rotSpeedX: random(0.01, 0.02),
-                rotSpeedY: random(0.01, 0.02)
+                rotSpeedX: minRotationSpeed,
+                rotSpeedY: minRotationSpeed,
+                hovered: false,
             })
 
         }
@@ -31,27 +32,42 @@ function setup() {
 function draw() {
     background(250, 180, 200);
 
+    let mouseXinWorld = mouseX - width / 2;
+    let mouseYinWorld = mouseY - height / 2;
 
-    // Add some ambient light
-    // ambientLight(150);
-    orbitControl();
 
-    // Update and draw each box with its own rotation
     for (let b of boxes) {
-        // Update rotation angles
+
+        let d = dist(mouseXinWorld, mouseYinWorld, b.x, b.y);
+        b.hovered = d < boxSize * 3;
+
+        if (b.hovered) {
+            b.rotSpeedX = 0.05;
+            b.rotSpeedY = 0.05;
+        } else {
+            b.rotSpeedX *= 0.95;
+            if (b.rotSpeedX < minRotationSpeed) b.rotSpeedX = minRotationSpeed;
+            b.rotSpeedY *= 0.95;
+            if (b.rotSpeedY < minRotationSpeed) b.rotSpeedY = minRotationSpeed;
+        }
+
         b.rotX += b.rotSpeedX;
         b.rotY += b.rotSpeedY;
+
 
         push(); // Save the current transformation state
         translate(b.x, b.y, b.z);
         rotateX(b.rotX);
         rotateY(b.rotY);
 
-        // Draw box
-        strokeWeight(2);
-        stroke(32, 8, 64);
+        if (b.hovered) {
+            fill(255, 100, 100);
+        } else {
+            fill(255);
+        }
+
         // noFill();
-        box(boxSize); // This line could be causing issues if 'box' variable name conflicts
+        box(boxSize);
         pop(); // Restore previous transformation state
     }
 }
