@@ -1,5 +1,5 @@
 let flowers = [];
-let num = 15;
+let num = 30;
 
 
 function setup() {
@@ -13,7 +13,7 @@ function setup() {
     for (let i = 0; i < num; i++) {
         let amp = num - i - 1;
 
-        flowers[i] = new Flower(i, 140 - i * 10, 300, amp, 12, (i + 1) * 0.1);
+        flowers[i] = new Flower(i, 300 - i * 10, 300, amp, 12, (i + 1) * 0.1);
     }
 }
 
